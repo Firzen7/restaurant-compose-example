@@ -20,5 +20,5 @@ val dummyRestaurants = listOf(
     Restaurant(12, "Restaurant 12", "Desc vbn"),
     Restaurant(13, "Restaurant 13", "Desc zxc"),
     Restaurant(14, "Restaurant 14", "Desc asd"),
-    Restaurant(15, "Restaurant 15", "Desc uil"),
+    Restaurant(15, "Restaurant 15", "Desc uil")
 )

@@ -2,8 +2,11 @@ package net.firzen.android.restaurantcomposeexample.ui.screens
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -23,12 +26,14 @@ import net.firzen.android.restaurantcomposeexample.Restaurant
 import net.firzen.android.restaurantcomposeexample.dummyRestaurants
 
 // https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin/tree/main/Chapter_01/chapter_1_restaurants_app/app/src/main/java/com/codingtroops/restaurantsapp
+// Pages 32 to 49
+
 
 @Composable
 fun RestaurantsScreen() {
-    Column(Modifier.verticalScroll(rememberScrollState())) {
-        dummyRestaurants.forEach {
-            RestaurantItem(it)
+    LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
+        items(dummyRestaurants) { restaurant ->
+            RestaurantItem(restaurant)
         }
     }
 }
@@ -49,10 +54,13 @@ fun RestaurantItem(item: Restaurant) {
 @Composable
 private fun RestaurantDetails(title: String, description: String, modifier: Modifier) {
     Column(modifier = modifier) {
+        // title of this restaurant
         Text(
             text = title,
             style = MaterialTheme.typography.titleSmall
         )
+
+        // description of restaurant, which is a little faded using alpha property
         CompositionLocalProvider(
             LocalContentAlpha provides ContentAlpha.medium
         ) {
