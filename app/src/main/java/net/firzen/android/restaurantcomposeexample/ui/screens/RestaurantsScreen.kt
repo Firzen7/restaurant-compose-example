@@ -54,7 +54,7 @@ fun RestaurantItem(item: Restaurant) {
             modifier = Modifier.padding(8.dp)
         ) {
             RestaurantIcon(icon = Icons.Filled.Place, modifier = Modifier.weight(0.15f))
-            RestaurantDetails(item.title, item.description, Modifier.weight(0.85f))
+            RestaurantDetails(item.title, item.description, Modifier.weight(0.70f))
             FavouriteIcon(Modifier.weight(0.15f))
         }
     }
