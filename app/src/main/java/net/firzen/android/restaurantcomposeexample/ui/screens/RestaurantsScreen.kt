@@ -48,6 +48,15 @@ fun RestaurantsScreen() {
 
 @Composable
 fun RestaurantItem(item: Restaurant) {
+    val favouriteState = remember { mutableStateOf(false) }
+
+    val icon = if(favouriteState.value) {
+        Icons.Filled.Favorite
+    }
+    else {
+        Icons.Filled.FavoriteBorder
+    }
+
     Card(modifier = Modifier.padding(8.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
@@ -55,26 +64,21 @@ fun RestaurantItem(item: Restaurant) {
         ) {
             RestaurantIcon(icon = Icons.Filled.Place, modifier = Modifier.weight(0.15f))
             RestaurantDetails(item.title, item.description, Modifier.weight(0.70f))
-            FavouriteIcon(Modifier.weight(0.15f))
+            RestaurantIcon(icon, Modifier.weight(0.15f)) {
+                favouriteState.value = !favouriteState.value
+            }
         }
     }
 }
 
 @Composable
-fun FavouriteIcon(modifier: Modifier) {
-    val favouriteState = remember { mutableStateOf(false) }
-
+fun RestaurantIcon(icon: ImageVector, modifier: Modifier, onClick: () -> Unit = {}) {
     Image(
-        imageVector = if(favouriteState.value) {
-            Icons.Filled.Favorite
-        }
-        else {
-            Icons.Filled.FavoriteBorder
-        },
-        contentDescription = "Favourite restaurant",
+        imageVector = icon,
+        contentDescription = "Restaurant icon",
         modifier = modifier
             .padding(8.dp)
-            .clickable { favouriteState.value = !favouriteState.value }
+            .clickable { onClick() }
     )
 }
 
@@ -97,11 +101,6 @@ private fun RestaurantDetails(title: String, description: String, modifier: Modi
             )
         }
     }
-}
-
-@Composable
-fun RestaurantIcon(icon: ImageVector, modifier: Modifier) {
-    Image(imageVector = icon, contentDescription = null, modifier = modifier.padding(8.dp))
 }
 
 @Preview(showBackground = true)
