@@ -17,10 +17,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -30,7 +26,6 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.ContentAlpha
 import androidx.wear.compose.material.LocalContentAlpha
 import net.firzen.android.restaurantcomposeexample.Restaurant
-import net.firzen.android.restaurantcomposeexample.RestaurantViewModel
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
 // https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin/tree/main/Chapter_01/chapter_1_restaurants_app/app/src/main/java/com/codingtroops/restaurantsapp
@@ -39,23 +34,12 @@ import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExa
 
 @Composable
 fun RestaurantsScreen() {
-    val viewModel: RestaurantViewModel = viewModel()
-
-    // remm
-    val state: MutableState<List<Restaurant>> = rememberSaveable {
-        mutableStateOf(viewModel.getRestaurants())
-    }
+    val viewModel: RestaurantsViewModel = viewModel()
 
     LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
-        items(state.value) { restaurant ->
+        items(viewModel.state.value) { restaurant ->
             RestaurantItem(restaurant) { clickedId ->
-                val restaurants = state.value.toMutableList()
-                val clickedIndex = restaurants.indexOfFirst { it.id == clickedId }
-                val clickedRestaurant = restaurants[clickedIndex]
-                restaurants[clickedIndex] = clickedRestaurant.copy(
-                    isFavourite = !clickedRestaurant.isFavourite
-                )
-                state.value = restaurants
+                viewModel.toggleFavourite(clickedId)
             }
         }
     }
