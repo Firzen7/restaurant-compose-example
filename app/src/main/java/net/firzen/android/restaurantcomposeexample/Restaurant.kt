@@ -3,7 +3,8 @@ package net.firzen.android.restaurantcomposeexample
 
 data class Restaurant(val id: Int,
                       val title: String,
-                      val description: String)
+                      val description: String,
+                      val isFavourite: Boolean = false)
 
 val dummyRestaurants = listOf(
     Restaurant(1, "The Matrix Diner", "Welcome to the desert of the real food"),

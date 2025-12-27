@@ -17,8 +17,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
@@ -39,18 +41,29 @@ import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExa
 fun RestaurantsScreen() {
     val viewModel: RestaurantViewModel = viewModel()
 
+    // remm
+    val state: MutableState<List<Restaurant>> = rememberSaveable {
+        mutableStateOf(viewModel.getRestaurants())
+    }
+
     LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
-        items(viewModel.getRestaurants()) { restaurant ->
-            RestaurantItem(restaurant)
+        items(state.value) { restaurant ->
+            RestaurantItem(restaurant) { clickedId ->
+                val restaurants = state.value.toMutableList()
+                val clickedIndex = restaurants.indexOfFirst { it.id == clickedId }
+                val clickedRestaurant = restaurants[clickedIndex]
+                restaurants[clickedIndex] = clickedRestaurant.copy(
+                    isFavourite = !clickedRestaurant.isFavourite
+                )
+                state.value = restaurants
+            }
         }
     }
 }
 
 @Composable
-fun RestaurantItem(item: Restaurant) {
-    val favouriteState = remember { mutableStateOf(false) }
-
-    val icon = if(favouriteState.value) {
+fun RestaurantItem(item: Restaurant, onClick: (id: Int) -> Unit) {
+    val icon = if(item.isFavourite) {
         Icons.Filled.Favorite
     }
     else {
@@ -65,7 +78,7 @@ fun RestaurantItem(item: Restaurant) {
             RestaurantIcon(icon = Icons.Filled.Place, modifier = Modifier.weight(0.15f))
             RestaurantDetails(item.title, item.description, Modifier.weight(0.70f))
             RestaurantIcon(icon, Modifier.weight(0.15f)) {
-                favouriteState.value = !favouriteState.value
+                onClick(item.id)
             }
         }
     }
