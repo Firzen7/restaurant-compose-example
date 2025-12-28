@@ -37,6 +37,15 @@ fun RestaurantsScreen() {
     val viewModel: RestaurantsViewModel = viewModel()
     viewModel.fetchRestaurants()
 
+    // This is quite interesting part. We are calling viewModel.fetchRestaurants() which
+    // is fetching restaurants asynchronously, so then how is it possible that
+    // restaurants are correctly shown in the app? The restaurants list should be still empty
+    // at the time of LazyColumn initialization.
+    // Well, the answer as far as I understand is that the `state` is being changed by
+    // fetchRestaurants(), and since we are getting restaurant items from there,
+    // it triggers recomposition of this LazyColumn automatically later on.
+    // TODO test if this assumption is true
+
     LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
         items(viewModel.state.value) { restaurant ->
             RestaurantItem(restaurant) { clickedId ->

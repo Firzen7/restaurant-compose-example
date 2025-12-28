@@ -20,7 +20,7 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     // using SavedStateHandle via calling restoreSelections() extension function
     val state = mutableStateOf(emptyList<Restaurant>())
     private val apiService: ApiService
-
+    private lateinit var restaurantsCall: Call<List<Restaurant>>
 
     /**
      * Retrofit initialization
@@ -41,6 +41,14 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     }
 
     /**
+     * It is important to cancel ongoing network calls here to prevent memory leaks and other bugs.
+     */
+    override fun onCleared() {
+        super.onCleared()
+        restaurantsCall.cancel()
+    }
+
+    /**
      * This method fetches list of Restaurants from the API
      */
     fun fetchRestaurants() {
@@ -49,8 +57,10 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
 //            state.value = restaurants.restoreSelections()
 //        }
 
+        restaurantsCall = apiService.getRestaurants()
+
         // enqueue() is asynchronous call
-        apiService.getRestaurants().enqueue(object : Callback<List<Restaurant>> {
+        restaurantsCall.enqueue(object : Callback<List<Restaurant>> {
             override fun onResponse(call: Call<List<Restaurant>?>,
                                     response: Response<List<Restaurant>?>) {
                 response.body()?.let { restaurants ->
