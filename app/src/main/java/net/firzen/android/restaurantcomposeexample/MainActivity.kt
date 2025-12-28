@@ -15,6 +15,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import net.firzen.android.restaurantcomposeexample.ui.screens.RestaurantsScreen
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
+// https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin
+
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

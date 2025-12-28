@@ -52,7 +52,15 @@ dependencies {
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.compose.material)
 
+    // Compose ViewModel
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.10.0")
+
+    // Retrofit
+    implementation("com.squareup.retrofit2:retrofit:2.9.0")
+    // still part of Retrofit logic - GSON is used to (de)serialize DB entities
+    implementation("com.google.code.gson:gson:2.8.6")
+    // this allows Retrofit to use GSON
+    implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

@@ -35,6 +35,7 @@ import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExa
 @Composable
 fun RestaurantsScreen() {
     val viewModel: RestaurantsViewModel = viewModel()
+    viewModel.fetchRestaurants()
 
     LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
         items(viewModel.state.value) { restaurant ->
