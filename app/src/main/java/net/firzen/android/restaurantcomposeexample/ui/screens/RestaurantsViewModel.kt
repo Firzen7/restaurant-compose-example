@@ -32,7 +32,7 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
                 GsonConverterFactory.create()
             )
             .baseUrl(
-                // Firebase Realtime DB endpoint base URL
+                // Base API endpoint URL
                 "http://10.0.2.2:8080/"
             )
             .build()
