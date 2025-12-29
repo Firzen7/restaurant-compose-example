@@ -62,6 +62,9 @@ dependencies {
     // this allows Retrofit to use GSON
     implementation("com.squareup.retrofit2:converter-gson:2.9.0")
 
+    // Timber logging, https://github.com/JakeWharton/timber, Apache 2.0 license
+    implementation("com.jakewharton.timber:timber:5.0.1")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

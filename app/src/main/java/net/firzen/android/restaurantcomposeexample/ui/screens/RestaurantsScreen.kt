@@ -25,6 +25,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.ContentAlpha
 import androidx.wear.compose.material.LocalContentAlpha
+import net.firzen.android.restaurantcomposeexample.LaunchedEffect
 import net.firzen.android.restaurantcomposeexample.Restaurant
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
@@ -35,7 +36,11 @@ import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExa
 @Composable
 fun RestaurantsScreen() {
     val viewModel: RestaurantsViewModel = viewModel()
-    viewModel.fetchRestaurants()
+//    viewModel.fetchRestaurants()
+
+//    LaunchedEffect(key1 = "request_restaurants") {
+//        viewModel.fetchRestaurants()
+//    }
 
     // This is quite interesting part. We are calling viewModel.fetchRestaurants() which
     // is fetching restaurants asynchronously, so then how is it possible that
@@ -44,7 +49,6 @@ fun RestaurantsScreen() {
     // Well, the answer as far as I understand is that the `state` is being changed by
     // fetchRestaurants(), and since we are getting restaurant items from there,
     // it triggers recomposition of this LazyColumn automatically later on.
-    // TODO test if this assumption is true
 
     LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
         items(viewModel.state.value) { restaurant ->

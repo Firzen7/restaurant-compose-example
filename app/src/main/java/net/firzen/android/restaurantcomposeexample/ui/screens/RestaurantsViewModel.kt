@@ -10,6 +10,7 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 
 private const val FAVOURITES = "favourites"
 
@@ -38,6 +39,8 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
             .build()
 
         apiService = retrofit.create(ApiService::class.java)
+
+        fetchRestaurants()
     }
 
     /**
@@ -51,7 +54,9 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     /**
      * This method fetches list of Restaurants from the API
      */
-    fun fetchRestaurants() {
+    private fun fetchRestaurants() {
+        Timber.i("fetchRestaurants()")
+
         // execute() call is synchronous
 //        apiService.getRestaurants().execute().body()?.let { restaurants ->
 //            state.value = restaurants.restoreSelections()
