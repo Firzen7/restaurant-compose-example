@@ -3,6 +3,7 @@ package net.firzen.android.restaurantcomposeexample.ui.screens
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -26,8 +27,6 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     // using SavedStateHandle via calling restoreSelections() extension function
     val state = mutableStateOf(emptyList<Restaurant>())
     private val apiService: ApiService
-    val job = Job()
-    private val scope = CoroutineScope(job + Dispatchers.IO)
 
 
     /**
@@ -51,22 +50,13 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     }
 
     /**
-     * It is important to cancel ongoing network calls here to prevent memory leaks and other bugs.
-     */
-    override fun onCleared() {
-        super.onCleared()
-        // cancels any ongoing network calls when RestaurantsViewModel is destroyed
-        job.cancel()
-    }
-
-    /**
      * This method fetches list of Restaurants from the API
      */
     private fun fetchRestaurants() {
         Timber.i("fetchRestaurants()")
 
-        // launches network thread (default scope is set to Dispatchers.IO
-        scope.launch {
+        // launches network thread (using Dispatchers.IO
+        viewModelScope.launch(Dispatchers.IO) {
             val restaurants = apiService.getRestaurants()
 
             // here we launch UI (Main) thread
