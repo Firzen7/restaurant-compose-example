@@ -4,6 +4,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -22,6 +23,11 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     // using SavedStateHandle via calling restoreSelections() extension function
     val state = mutableStateOf(emptyList<Restaurant>())
     private val apiService: ApiService
+
+    // convenient errors handler that is compatible with Coroutines
+    private val errorHandler = CoroutineExceptionHandler { _, exception ->
+        Timber.e(exception, "Error fetching restaurants list from API!")
+    }
 
 
     /**
@@ -51,18 +57,13 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
         Timber.i("fetchRestaurants()")
 
         // launches network thread (using Dispatchers.IO
-        viewModelScope.launch(Dispatchers.IO) {
-            try {
-                val restaurants = apiService.getRestaurants()
+        viewModelScope.launch(Dispatchers.IO + errorHandler) {
+            val restaurants = apiService.getRestaurants()
 
-                // Here we launch UI (Main) thread. This is needed, because we are here changing
-                // composable state, which directly affects the UI.
-                withContext(Dispatchers.Main) {
-                    state.value = restaurants.restoreSelections()
-                }
-            }
-            catch (e: Exception) {
-                Timber.e(e, "Error fetching restaurants list from API!")
+            // Here we launch UI (Main) thread. This is needed, because we are here changing
+            // composable state, which directly affects the UI.
+            withContext(Dispatchers.Main) {
+                state.value = restaurants.restoreSelections()
             }
         }
     }
