@@ -65,12 +65,13 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     private fun fetchRestaurants() {
         Timber.i("fetchRestaurants()")
 
+        // launches network thread (default scope is set to Dispatchers.IO
         scope.launch {
             val restaurants = apiService.getRestaurants()
 
+            // here we launch UI (Main) thread
             withContext(Dispatchers.Main) {
                 state.value = restaurants.restoreSelections()
-
             }
         }
     }
