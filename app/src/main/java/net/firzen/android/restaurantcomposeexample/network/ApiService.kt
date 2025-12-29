@@ -13,5 +13,5 @@ import retrofit2.http.GET
 interface ApiService {
     // GET request for /restaurants.json endpoint
     @GET("restaurants.json")
-    fun getRestaurants() : Call<List<Restaurant>>
+    suspend fun getRestaurants() : List<Restaurant>
 }

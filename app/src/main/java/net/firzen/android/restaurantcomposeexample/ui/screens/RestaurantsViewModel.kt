@@ -3,6 +3,11 @@ package net.firzen.android.restaurantcomposeexample.ui.screens
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import net.firzen.android.restaurantcomposeexample.Restaurant
 import net.firzen.android.restaurantcomposeexample.network.ApiService
 import retrofit2.Call
@@ -21,7 +26,9 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     // using SavedStateHandle via calling restoreSelections() extension function
     val state = mutableStateOf(emptyList<Restaurant>())
     private val apiService: ApiService
-    private lateinit var restaurantsCall: Call<List<Restaurant>>
+    val job = Job()
+    private val scope = CoroutineScope(job + Dispatchers.IO)
+
 
     /**
      * Retrofit initialization
@@ -48,7 +55,8 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
      */
     override fun onCleared() {
         super.onCleared()
-        restaurantsCall.cancel()
+        // cancels any ongoing network calls when RestaurantsViewModel is destroyed
+        job.cancel()
     }
 
     /**
@@ -57,26 +65,14 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     private fun fetchRestaurants() {
         Timber.i("fetchRestaurants()")
 
-        // execute() call is synchronous
-//        apiService.getRestaurants().execute().body()?.let { restaurants ->
-//            state.value = restaurants.restoreSelections()
-//        }
+        scope.launch {
+            val restaurants = apiService.getRestaurants()
 
-        restaurantsCall = apiService.getRestaurants()
+            withContext(Dispatchers.Main) {
+                state.value = restaurants.restoreSelections()
 
-        // enqueue() is asynchronous call
-        restaurantsCall.enqueue(object : Callback<List<Restaurant>> {
-            override fun onResponse(call: Call<List<Restaurant>?>,
-                                    response: Response<List<Restaurant>?>) {
-                response.body()?.let { restaurants ->
-                    state.value = restaurants.restoreSelections()
-                }
             }
-
-            override fun onFailure(call: Call<List<Restaurant>?>, t: Throwable) {
-                t.printStackTrace()
-            }
-        })
+        }
     }
 
     fun toggleFavourite(targetId: Int) {
