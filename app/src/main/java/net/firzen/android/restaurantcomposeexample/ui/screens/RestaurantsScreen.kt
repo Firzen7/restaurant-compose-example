@@ -27,13 +27,12 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.ContentAlpha
 import androidx.wear.compose.material.LocalContentAlpha
-import kotlinx.coroutines.GlobalScope
 import net.firzen.android.restaurantcomposeexample.Restaurant
 import net.firzen.android.restaurantcomposeexample.User
-import net.firzen.android.restaurantcomposeexample.saveDetails
 import net.firzen.android.restaurantcomposeexample.saveDetails2
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
@@ -65,7 +64,7 @@ fun RestaurantsScreen() {
         horizontalAlignment = Alignment.CenterHorizontally) {
 
         Button(
-            onClick = { saveDetails2(context, GlobalScope, User(5, "Frankie")) },
+            onClick = { saveDetails2(context, viewModel.viewModelScope, User(5, "Frankie")) },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue,
                 contentColor = Color.White

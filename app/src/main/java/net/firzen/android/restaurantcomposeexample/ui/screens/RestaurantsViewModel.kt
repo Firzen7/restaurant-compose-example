@@ -4,16 +4,11 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.firzen.android.restaurantcomposeexample.Restaurant
 import net.firzen.android.restaurantcomposeexample.network.ApiService
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
@@ -57,11 +52,17 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
 
         // launches network thread (using Dispatchers.IO
         viewModelScope.launch(Dispatchers.IO) {
-            val restaurants = apiService.getRestaurants()
+            try {
+                val restaurants = apiService.getRestaurants()
 
-            // here we launch UI (Main) thread
-            withContext(Dispatchers.Main) {
-                state.value = restaurants.restoreSelections()
+                // Here we launch UI (Main) thread. This is needed, because we are here changing
+                // composable state, which directly affects the UI.
+                withContext(Dispatchers.Main) {
+                    state.value = restaurants.restoreSelections()
+                }
+            }
+            catch (e: Exception) {
+                Timber.e(e, "Error fetching restaurants list from API!")
             }
         }
     }
