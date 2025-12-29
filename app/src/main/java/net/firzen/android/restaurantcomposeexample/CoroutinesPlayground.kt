@@ -47,6 +47,12 @@ fun saveDetails(user: User) {
 fun saveDetails2(context: Context, coroutineScope: CoroutineScope, user: User) {
     Timber.d("Preparing to launch coroutine")
 
+    // .launch() here is so-called Coroutine builder.
+    // Coroutine builders are extension functions on CoroutineScope and allow us to create
+    // and start coroutines.
+    //
+    // Essentially, they are a bridge between the normal synchronous world with regular functions
+    // and the suspending world with suspending functions.
     coroutineScope.launch(Dispatchers.Main) {
         Toast.makeText(context, "Storing user ...", Toast.LENGTH_SHORT).show()
 
