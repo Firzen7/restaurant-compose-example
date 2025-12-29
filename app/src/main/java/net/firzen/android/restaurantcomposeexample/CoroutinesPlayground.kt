@@ -1,10 +1,13 @@
 package net.firzen.android.restaurantcomposeexample
 
+import android.content.Context
+import android.widget.Toast
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import timber.log.Timber
 
 data class User(val id: Int, val name: String)
@@ -17,15 +20,43 @@ data class User(val id: Int, val name: String)
  */
 suspend fun storeUser(user: User) {
     Timber.i("storeUser($user)")
-    Thread.sleep(2000)
+    Thread.sleep(5000)
     Timber.i("User stored!")
 }
 
 fun saveDetails(user: User) {
     Timber.d("Preparing to launch coroutine")
+
+    // GlobalScope should be avoided since the work launched within this coroutine scope is only
+    // canceled when the application has been destroyed. This is only used to explain the principle.
     GlobalScope.launch(Dispatchers.IO) {
         storeUser(user)
     }
+
+    Timber.d("Continuing program execution")
+}
+
+/**
+ * Improved version of saveDetails(), which uses variable CoroutineScope and demonstrates use of
+ * different Dispatchers:
+ *
+ * Dispatchers.Main     --> Main thread of Android app, similar to runOnUiThread { ... }
+ * Dispatchers.IO       --> Disk or network based operations
+ * Dispatchers.Default  --> CPU-intensive tasks
+ */
+fun saveDetails2(context: Context, coroutineScope: CoroutineScope, user: User) {
+    Timber.d("Preparing to launch coroutine")
+
+    coroutineScope.launch(Dispatchers.Main) {
+        Toast.makeText(context, "Storing user ...", Toast.LENGTH_SHORT).show()
+
+        withContext(Dispatchers.IO) {
+            storeUser(user)
+        }
+
+        Toast.makeText(context, "User stored!", Toast.LENGTH_SHORT).show()
+    }
+
     Timber.d("Continuing program execution")
 }
 
