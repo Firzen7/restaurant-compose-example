@@ -1,7 +1,9 @@
 package net.firzen.android.restaurantcomposeexample
 
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import timber.log.Timber
 
@@ -26,3 +28,33 @@ fun saveDetails(user: User) {
     }
     Timber.d("Continuing program execution")
 }
+
+// *** Custom coroutine scope instead of pre-defined GlobalScope ***********************************
+
+/**
+ * A Job object: This represents a cancelable component that controls the lifecycle
+ * of a coroutine launched in a specific scope. When a job is canceled, the job will
+ * cancel the coroutine it manages. For example, if we have defined a job object
+ * and a custom myScope object inside an Activity class, a good place to cancel
+ * the coroutine would be in the onDestroy() callback by calling the cancel()
+ * method on the job object:
+ *
+ * override fun onDestroy() {
+ *     super.onDestroy()
+ *     job.cancel()
+ * }
+ *
+ * By doing this, we've ensured that our async work done within our coroutine, which
+ * uses the myScope scope, will stop when the activity has been destroyed and will
+ * not cause any memory leaks.
+ */
+private val job = Job()
+
+/**
+ * A Dispatcher object: Marking a method as suspended provides no details about
+ * the thread pool it should run on.
+ *
+ * This means that all coroutines launched in myScope will run their work, by
+ * default, in the Dispatchers.IO thread pool and will not block the UI.
+ */
+private val myScope = CoroutineScope(context = job + Dispatchers.IO)
