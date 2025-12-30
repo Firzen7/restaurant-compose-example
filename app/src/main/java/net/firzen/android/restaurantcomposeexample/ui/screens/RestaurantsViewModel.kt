@@ -30,7 +30,7 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
         Timber.e(exception, "Error fetching restaurants list from API!")
 
         // TODO figure out how to correctly error handling here (might be something to do with
-        //  MutableSharedFlow and emit()
+        //  MutableSharedFlow and emit())
 //        viewModelScope.launch(Dispatchers.Main) {
 //            Toast.makeText(, "sdf", Toast.LENGTH_SHORT)
 //        }
@@ -63,15 +63,19 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     private fun fetchRestaurants() {
         Timber.i("fetchRestaurants()")
 
-        // launches network thread (using Dispatchers.IO
-        viewModelScope.launch(Dispatchers.IO + errorHandler) {
-            val restaurants = apiService.getRestaurants()
+        // we can launch this logic directly on Main (UI) thread, since
+        // getRemoteRestaurants() handles IO thread by itself
+        viewModelScope.launch(Dispatchers.Main + errorHandler) {
+            val restaurants = getRemoteRestaurants()
+            state.value = restaurants.restoreSelections()
+        }
+    }
 
-            // Here we launch UI (Main) thread. This is needed, because we are here changing
-            // composable state, which directly affects the UI.
-            withContext(Dispatchers.Main) {
-                state.value = restaurants.restoreSelections()
-            }
+    private suspend fun getRemoteRestaurants() : List<Restaurant> {
+        // Here we are returning result of getRestaurants() which is always going to be ran
+        // on IO Dispatcher! This was very difficult to do before coroutines..
+        return withContext(Dispatchers.IO) {
+            apiService.getRestaurants()
         }
     }
 
