@@ -9,6 +9,7 @@ import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import net.firzen.android.restaurantcomposeexample.BASE_API_URL
 import net.firzen.android.restaurantcomposeexample.Restaurant
 import net.firzen.android.restaurantcomposeexample.network.ApiService
 import retrofit2.Retrofit
@@ -48,7 +49,7 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
             )
             .baseUrl(
                 // Base API endpoint URL
-                "http://10.0.2.2:8080/"
+                BASE_API_URL
             )
             .build()
 

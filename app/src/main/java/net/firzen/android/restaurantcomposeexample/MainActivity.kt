@@ -12,6 +12,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import net.firzen.android.restaurantcomposeexample.ui.screens.RestaurantDetailsScreen
 import net.firzen.android.restaurantcomposeexample.ui.screens.RestaurantsScreen
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
@@ -26,7 +27,9 @@ class MainActivity : ComponentActivity() {
             RestaurantComposeExampleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(Modifier.padding(innerPadding)) {
-                        RestaurantsScreen()
+                        RestaurantDetailsScreen()
+
+//                        RestaurantsScreen()
                     }
                 }
             }
