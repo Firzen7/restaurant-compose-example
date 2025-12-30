@@ -41,7 +41,7 @@ import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExa
 // Added ViewModel in chapter 2 (pages 52 - 84)
 
 @Composable
-fun RestaurantsScreen() {
+fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
     val viewModel: RestaurantsViewModel = viewModel()
 //    viewModel.fetchRestaurants()
 
@@ -76,16 +76,20 @@ fun RestaurantsScreen() {
         }
         LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
             items(viewModel.state.value) { restaurant ->
-                RestaurantItem(restaurant) { clickedId ->
+                RestaurantItem(restaurant, onFavouriteClick = { clickedId ->
                     viewModel.toggleFavourite(clickedId)
-                }
+                }, onItemClick = {
+                    id -> onItemClick(id)
+                })
             }
         }
     }
 }
 
 @Composable
-fun RestaurantItem(item: Restaurant, onClick: (id: Int) -> Unit) {
+fun RestaurantItem(item: Restaurant, onFavouriteClick: (id: Int) -> Unit,
+                   onItemClick: (id: Int) -> Unit) {
+
     val icon = if(item.isFavourite) {
         Icons.Filled.Favorite
     }
@@ -93,7 +97,12 @@ fun RestaurantItem(item: Restaurant, onClick: (id: Int) -> Unit) {
         Icons.Filled.FavoriteBorder
     }
 
-    Card(modifier = Modifier.padding(8.dp)) {
+    Card(modifier = Modifier
+        .padding(8.dp)
+        // on click listener for the whole restaurant item (used to go into RestaurantDetailsScreen)
+        .clickable { onItemClick(item.id) }
+    ) {
+
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(8.dp)
@@ -101,7 +110,7 @@ fun RestaurantItem(item: Restaurant, onClick: (id: Int) -> Unit) {
             RestaurantIcon(icon = Icons.Filled.Place, modifier = Modifier.weight(0.15f))
             RestaurantDetails(item.title, item.description, Modifier.weight(0.70f))
             RestaurantIcon(icon, Modifier.weight(0.15f)) {
-                onClick(item.id)
+                onFavouriteClick(item.id)
             }
         }
     }

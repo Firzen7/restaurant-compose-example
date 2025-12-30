@@ -65,6 +65,9 @@ dependencies {
     // Timber logging, https://github.com/JakeWharton/timber, Apache 2.0 license
     implementation("com.jakewharton.timber:timber:5.0.1")
 
+    // AndroidX navigation for Compose
+    implementation("androidx.navigation:navigation-compose:2.9.6")
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

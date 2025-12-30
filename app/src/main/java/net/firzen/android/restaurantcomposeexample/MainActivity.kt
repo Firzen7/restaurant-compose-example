@@ -8,10 +8,13 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import net.firzen.android.restaurantcomposeexample.ui.screens.RestaurantDetailsScreen
 import net.firzen.android.restaurantcomposeexample.ui.screens.RestaurantsScreen
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
@@ -27,8 +30,10 @@ class MainActivity : ComponentActivity() {
             RestaurantComposeExampleTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     Box(Modifier.padding(innerPadding)) {
-                        RestaurantDetailsScreen()
 
+                        RestaurantsApp()
+
+//                        RestaurantDetailsScreen()
 //                        RestaurantsScreen()
                     }
                 }
@@ -38,17 +43,25 @@ class MainActivity : ComponentActivity() {
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
-
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    RestaurantComposeExampleTheme {
-        Greeting("Android")
+private fun RestaurantsApp() {
+    val navController = rememberNavController()
+    NavHost(navController, startDestination = "restaurants") {
+        composable(route = "restaurants") {
+            RestaurantsScreen() { clickedRestaurantId ->
+                navController.navigate("restaurants/$clickedRestaurantId")
+            }
+        }
+        composable(
+            route = "restaurants/{restaurant_id}",
+            // this is boilerplate needed to tell the navigation component what arguments
+            // to extract from route and how (what datatype it is)
+            arguments =
+            listOf(navArgument("restaurant_id") {
+                type = NavType.IntType
+            })
+        ) { navStackEntry ->
+            val id = navStackEntry.arguments?.getInt("restaurant_id")
+            RestaurantDetailsScreen()
+        }
     }
 }
