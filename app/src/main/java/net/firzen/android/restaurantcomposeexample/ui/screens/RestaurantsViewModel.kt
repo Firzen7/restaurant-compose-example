@@ -1,5 +1,6 @@
 package net.firzen.android.restaurantcomposeexample.ui.screens
 
+import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -27,6 +28,12 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     // convenient errors handler that is compatible with Coroutines
     private val errorHandler = CoroutineExceptionHandler { _, exception ->
         Timber.e(exception, "Error fetching restaurants list from API!")
+
+        // TODO figure out how to correctly error handling here (might be something to do with
+        //  MutableSharedFlow and emit()
+//        viewModelScope.launch(Dispatchers.Main) {
+//            Toast.makeText(, "sdf", Toast.LENGTH_SHORT)
+//        }
     }
 
 
