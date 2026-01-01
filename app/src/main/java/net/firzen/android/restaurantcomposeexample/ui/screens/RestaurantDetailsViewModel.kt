@@ -25,7 +25,8 @@ class RestaurantDetailsViewModel(private val stateHandle: SavedStateHandle) : Vi
 
         restInterface = retrofit.create(ApiService::class.java)
 
-
+        // here we are getting the id of restaurant, which was set using navigation component
+        // as defined in MainActivity
         val restaurantId = stateHandle.get<Int>("restaurant_id") ?: 0
 
         viewModelScope.launch {

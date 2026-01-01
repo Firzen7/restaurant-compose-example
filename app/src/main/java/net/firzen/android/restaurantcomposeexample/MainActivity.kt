@@ -60,7 +60,8 @@ private fun RestaurantsApp() {
                 type = NavType.IntType
             })
         ) { navStackEntry ->
-            val id = navStackEntry.arguments?.getInt("restaurant_id")
+            // not passing any id directly from here to RestaurantDetailsScreen, because
+            // the restaurant id is being set in RestaurantDetailsViewModel using SavedStateHandle
             RestaurantDetailsScreen()
         }
     }

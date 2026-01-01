@@ -43,11 +43,6 @@ import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExa
 @Composable
 fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
     val viewModel: RestaurantsViewModel = viewModel()
-//    viewModel.fetchRestaurants()
-
-//    LaunchedEffect(key1 = "request_restaurants") {
-//        viewModel.fetchRestaurants()
-//    }
 
     // This is quite interesting part. We are calling viewModel.fetchRestaurants() which
     // is fetching restaurants asynchronously, so then how is it possible that
@@ -63,6 +58,7 @@ fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally) {
 
+        // "Launch coroutine" test button
         Button(
             onClick = { saveDetails2(context, viewModel.viewModelScope, User(5, "Frankie")) },
             colors = ButtonDefaults.buttonColors(
@@ -74,12 +70,13 @@ fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
                 text = "Launch coroutine"
             )
         }
+
         LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
             items(viewModel.state.value) { restaurant ->
                 RestaurantItem(restaurant, onFavouriteClick = { clickedId ->
                     viewModel.toggleFavourite(clickedId)
-                }, onItemClick = {
-                    id -> onItemClick(id)
+                }, onItemClick = { id ->
+                    onItemClick(id)
                 })
             }
         }

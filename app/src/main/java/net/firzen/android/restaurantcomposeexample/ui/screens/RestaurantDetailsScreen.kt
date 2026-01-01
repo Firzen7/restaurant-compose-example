@@ -14,9 +14,9 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 
 @Composable
 fun RestaurantDetailsScreen() {
-    val viewModel: RestaurantDetailsViewModel =
-        viewModel()
+    val viewModel: RestaurantDetailsViewModel = viewModel()
     val item = viewModel.state.value
+
     if (item != null) {
         Column(horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier.fillMaxSize().padding(16.dp)) {
