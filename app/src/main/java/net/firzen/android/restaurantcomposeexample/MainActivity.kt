@@ -15,6 +15,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import androidx.navigation.navDeepLink
 import net.firzen.android.restaurantcomposeexample.ui.screens.RestaurantDetailsScreen
 import net.firzen.android.restaurantcomposeexample.ui.screens.RestaurantsScreen
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
@@ -55,9 +56,13 @@ private fun RestaurantsApp() {
             route = "restaurants/{restaurant_id}",
             // this is boilerplate needed to tell the navigation component what arguments
             // to extract from route and how (what datatype it is)
-            arguments =
-            listOf(navArgument("restaurant_id") {
+            arguments = listOf(navArgument("restaurant_id") {
                 type = NavType.IntType
+            }),
+            // Deep links integration. Test using:
+            // adb shell am start -W -a android.intent.action.VIEW -d "https://www.restaurantsapp.details.com/4" net.firzen.android.restaurantcomposeexample
+            deepLinks = listOf(navDeepLink {
+                uriPattern = "www.restaurantsapp.details.com/{restaurant_id}"
             })
         ) { navStackEntry ->
             // not passing any id directly from here to RestaurantDetailsScreen, because
