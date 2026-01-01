@@ -1,6 +1,5 @@
 #!/bin/bash
 
-cd data
-./nweb 8080 json
+java -jar restaurants-api-v1.jar
 
 exit 0
