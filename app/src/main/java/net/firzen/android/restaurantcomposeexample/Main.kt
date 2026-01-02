@@ -1,6 +1,7 @@
 package net.firzen.android.restaurantcomposeexample
 
 import android.app.Application
+import android.content.Context
 import timber.log.Timber
 
 class Main : Application() {
@@ -11,5 +12,11 @@ class Main : Application() {
         Timber.plant(Timber.DebugTree())
 
         Timber.i("*** App started ***")
+    }
+
+    init { app = this }
+    companion object {
+        private lateinit var app: Main
+        fun getAppContext(): Context = app.applicationContext
     }
 }

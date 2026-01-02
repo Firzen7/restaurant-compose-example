@@ -1,6 +1,5 @@
 package net.firzen.android.restaurantcomposeexample.ui.screens
 
-import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -10,11 +9,16 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.firzen.android.restaurantcomposeexample.BASE_API_URL
+import net.firzen.android.restaurantcomposeexample.Main
 import net.firzen.android.restaurantcomposeexample.Restaurant
+import net.firzen.android.restaurantcomposeexample.db.RestaurantsDb
 import net.firzen.android.restaurantcomposeexample.network.ApiService
+import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
+import java.net.ConnectException
+import java.net.UnknownHostException
 
 private const val FAVOURITES = "favourites"
 
@@ -25,6 +29,8 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     // using SavedStateHandle via calling restoreSelections() extension function
     val state = mutableStateOf(emptyList<Restaurant>())
     private val apiService: ApiService
+    private var restaurantsDao = RestaurantsDb.getDaoInstance(Main.getAppContext())
+
 
     // convenient errors handler that is compatible with Coroutines
     private val errorHandler = CoroutineExceptionHandler { _, exception ->
@@ -67,16 +73,33 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
         // we can launch this logic directly on Main (UI) thread, since
         // getRemoteRestaurants() handles IO thread by itself
         viewModelScope.launch(Dispatchers.Main + errorHandler) {
-            val restaurants = getRemoteRestaurants()
+            val restaurants = getAllRestaurants()
             state.value = restaurants.restoreSelections()
         }
     }
 
-    private suspend fun getRemoteRestaurants() : List<Restaurant> {
+    private suspend fun getAllRestaurants() : List<Restaurant> {
         // Here we are returning result of getRestaurants() which is always going to be ran
         // on IO Dispatcher! This was very difficult to do before coroutines..
         return withContext(Dispatchers.IO) {
-            apiService.getRestaurants()
+//            apiService.getRestaurants()
+
+            try {
+                // here we try to fetch restaurants from API
+                val restaurants = apiService.getRestaurants()
+                restaurantsDao.addAll(restaurants)
+                restaurants
+            } catch (e: Exception) {
+                // .. but if it fails, we load cached restaurants from DB
+                when (e) {
+                    is UnknownHostException,
+                    is ConnectException,
+                    is HttpException -> {
+                        restaurantsDao.getAll()
+                    }
+                    else -> throw e
+                }
+            }
         }
     }
 
