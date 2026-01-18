@@ -83,25 +83,48 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
         // Here we are returning result of getRestaurants() which is always going to be ran
         // on IO Dispatcher! This was very difficult to do before coroutines..
         return withContext(Dispatchers.IO) {
-//            apiService.getRestaurants()
-
             try {
                 // here we try to fetch restaurants from API
-                val restaurants = apiService.getRestaurants()
-                restaurantsDao.addAll(restaurants)
-                restaurants
+                refreshCache()
             } catch (e: Exception) {
-                // .. but if it fails, we load cached restaurants from DB
+                // .. if it fails, we only care if there are no data in Room DB yet
                 when (e) {
-                    is UnknownHostException,
-                    is ConnectException,
-                    is HttpException -> {
-                        restaurantsDao.getAll()
+                    is UnknownHostException, is ConnectException, is HttpException -> {
+                        if (restaurantsDao.getAll().isEmpty()) {
+                            throw Exception("Something went wrong. We have no data.")
+                        }
                     }
+
+                    // of course we also care if unforeseen exception type has happened
                     else -> throw e
                 }
             }
+
+            // unless there was a serious problem, we always return data stored in local Room DB,
+            // which is our Single Source of Truth
+            return@withContext restaurantsDao.getAll()
         }
+    }
+
+    /**
+     * Gets fresh data from the API and stores them into the database while preserving favourites
+     * which are stored locally using Room DB.
+     */
+    private suspend fun refreshCache() {
+        // fetches fresh restaurants data from API
+        val remoteRestaurants = apiService.getRestaurants()
+        // loads all restaurants from local DB that are favourited
+        val favoriteRestaurants = restaurantsDao.getAllFavorited()
+
+        // saves new restaurants into the DB (while rewriting existing ones)
+        restaurantsDao.addAll(remoteRestaurants)
+
+        // sets all new restaurants which were previously favourited to be favourited again
+        restaurantsDao.updateAll(
+            favoriteRestaurants.map {
+                PartialRestaurant(it.id, true)
+            }
+        )
     }
 
     fun toggleFavourite(targetId: Int) {
@@ -117,15 +140,21 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
         state.value = restaurants
 
         viewModelScope.launch {
-            toggleFavoriteRestaurant(targetId, targetRestaurant.isFavourite)
+            val updatedRestaurants = toggleFavoriteRestaurant(targetId, targetRestaurant.isFavourite)
+            // Here we are actually rewriting the UI state to correspond with latest data stored in DB
+            // if we skipped this, the app would still work, but there could in theory be
+            // inconsistency between shown UI state and data stored in DB.
+            // So this line ensures that favourite icons are always shown correctly in the UI.
+            state.value = updatedRestaurants
         }
     }
 
-    private suspend fun toggleFavoriteRestaurant(id: Int, oldValue: Boolean) {
+    private suspend fun toggleFavoriteRestaurant(id: Int, oldValue: Boolean) : List<Restaurant> {
         return withContext(Dispatchers.IO) {
             restaurantsDao.update(
                 PartialRestaurant(id = id, isFavorite = !oldValue)
             )
+            restaurantsDao.getAll()
         }
     }
 
