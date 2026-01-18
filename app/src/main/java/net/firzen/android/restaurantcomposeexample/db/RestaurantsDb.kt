@@ -9,7 +9,7 @@ import net.firzen.android.restaurantcomposeexample.db.Restaurant
 
 @Database(
     entities = [Restaurant::class],
-    version = 1,
+    version = 2,
     exportSchema = false)
 abstract class RestaurantsDb : RoomDatabase() {
     abstract val dao: RestaurantsDao

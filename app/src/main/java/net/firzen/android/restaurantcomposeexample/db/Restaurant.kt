@@ -20,5 +20,7 @@ data class Restaurant(
     @SerializedName("r_description")
     val description: String,
 
-    var isFavourite: Boolean = false
+    // val (immutability) is important here, since it allows correct Compose recompositions
+    @ColumnInfo(name = "is_favorite")
+    val isFavourite: Boolean = false
 )

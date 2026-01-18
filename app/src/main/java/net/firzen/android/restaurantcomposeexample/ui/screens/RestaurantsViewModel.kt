@@ -10,6 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.firzen.android.restaurantcomposeexample.BASE_API_URL
 import net.firzen.android.restaurantcomposeexample.Main
+import net.firzen.android.restaurantcomposeexample.db.PartialRestaurant
 import net.firzen.android.restaurantcomposeexample.db.Restaurant
 import net.firzen.android.restaurantcomposeexample.db.RestaurantsDb
 import net.firzen.android.restaurantcomposeexample.network.ApiService
@@ -114,6 +115,18 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
 
         storeSelection(restaurants[targetIndex])
         state.value = restaurants
+
+        viewModelScope.launch {
+            toggleFavoriteRestaurant(targetId, targetRestaurant.isFavourite)
+        }
+    }
+
+    private suspend fun toggleFavoriteRestaurant(id: Int, oldValue: Boolean) {
+        return withContext(Dispatchers.IO) {
+            restaurantsDao.update(
+                PartialRestaurant(id = id, isFavorite = !oldValue)
+            )
+        }
     }
 
     fun storeSelection(item: Restaurant) {
@@ -137,10 +150,11 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     fun List<Restaurant>.restoreSelections() : List<Restaurant> {
         // here we get all the stored favourite ids
         stateHandle.get<List<Int>?>(FAVOURITES)?.let { favouriteIds ->
-            val restaurantsMap = this.associateBy { it.id }
+            val restaurantsMap = this.associateBy { it.id }.toMutableMap()
             favouriteIds.forEach { id ->
                 // we mark each restaurant whose id was in favourites list as favourite
-                restaurantsMap[id]?.isFavourite = true
+                val restaurant = restaurantsMap[id] ?: return@forEach
+                restaurantsMap[id] = restaurant.copy(isFavourite = true)
             }
 
             // here we return new altered list of restaurants with correct favourite statuses
