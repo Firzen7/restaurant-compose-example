@@ -10,7 +10,7 @@ val Purple40 = Color(0xFF6650a4)
 val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
-val MatrixBlack = Color(0xFF14241B)
+val MatrixBlack = Color(0xFF475047)
 val MatrixSurface = Color(0xFF121A14)
 
 val MatrixGreenPrimary = Color(0xFF00FF6A)
