@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import net.firzen.android.restaurantcomposeexample.Main
-import net.firzen.android.restaurantcomposeexample.Restaurant
+import net.firzen.android.restaurantcomposeexample.db.Restaurant
 
 @Database(
     entities = [Restaurant::class],

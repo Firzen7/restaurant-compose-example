@@ -8,7 +8,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.firzen.android.restaurantcomposeexample.BASE_API_URL
-import net.firzen.android.restaurantcomposeexample.Restaurant
+import net.firzen.android.restaurantcomposeexample.db.Restaurant
 import net.firzen.android.restaurantcomposeexample.network.ApiService
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

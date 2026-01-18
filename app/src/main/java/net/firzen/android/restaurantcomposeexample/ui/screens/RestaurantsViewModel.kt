@@ -10,7 +10,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import net.firzen.android.restaurantcomposeexample.BASE_API_URL
 import net.firzen.android.restaurantcomposeexample.Main
-import net.firzen.android.restaurantcomposeexample.Restaurant
+import net.firzen.android.restaurantcomposeexample.db.Restaurant
 import net.firzen.android.restaurantcomposeexample.db.RestaurantsDb
 import net.firzen.android.restaurantcomposeexample.network.ApiService
 import retrofit2.HttpException
@@ -36,7 +36,7 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
     private val errorHandler = CoroutineExceptionHandler { _, exception ->
         Timber.e(exception, "Error fetching restaurants list from API!")
 
-        // TODO figure out how to correctly error handling here (might be something to do with
+        // TODO figure out how to correctly handle errors here (might be something to do with
         //  MutableSharedFlow and emit())
 //        viewModelScope.launch(Dispatchers.Main) {
 //            Toast.makeText(, "sdf", Toast.LENGTH_SHORT)
@@ -107,9 +107,11 @@ class RestaurantsViewModel(private val stateHandle: SavedStateHandle) : ViewMode
         val restaurants = state.value.toMutableList()
         val targetIndex = restaurants.indexOfFirst { it.id == targetId }
         val targetRestaurant = restaurants[targetIndex]
+
         restaurants[targetIndex] = targetRestaurant.copy(
             isFavourite = !targetRestaurant.isFavourite
         )
+
         storeSelection(restaurants[targetIndex])
         state.value = restaurants
     }

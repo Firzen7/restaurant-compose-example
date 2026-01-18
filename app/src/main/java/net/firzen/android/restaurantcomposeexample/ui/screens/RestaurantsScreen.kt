@@ -16,6 +16,7 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -23,6 +24,7 @@ import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.fromColorLong
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,9 +33,13 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.ContentAlpha
 import androidx.wear.compose.material.LocalContentAlpha
-import net.firzen.android.restaurantcomposeexample.Restaurant
+import net.firzen.android.restaurantcomposeexample.db.Restaurant
 import net.firzen.android.restaurantcomposeexample.User
 import net.firzen.android.restaurantcomposeexample.saveDetails2
+import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixBlack
+import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixGreenPrimary
+import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixGreenSecondary
+import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixTextPrimary
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
 // https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin/tree/main/Chapter_01/chapter_1_restaurants_app/app/src/main/java/com/codingtroops/restaurantsapp
@@ -62,8 +68,8 @@ fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
         Button(
             onClick = { saveDetails2(context, viewModel.viewModelScope, User(5, "Frankie")) },
             colors = ButtonDefaults.buttonColors(
-                containerColor = Color.Blue,
-                contentColor = Color.White
+                containerColor = MatrixGreenPrimary,
+                contentColor = MatrixBlack
             )
         ) {
             Text(
@@ -97,7 +103,10 @@ fun RestaurantItem(item: Restaurant, onFavouriteClick: (id: Int) -> Unit,
     Card(modifier = Modifier
         .padding(8.dp)
         // on click listener for the whole restaurant item (used to go into RestaurantDetailsScreen)
-        .clickable { onItemClick(item.id) }
+        .clickable { onItemClick(item.id) },
+        colors = CardDefaults.cardColors(
+            containerColor = MatrixGreenSecondary
+        )
     ) {
 
         Row(

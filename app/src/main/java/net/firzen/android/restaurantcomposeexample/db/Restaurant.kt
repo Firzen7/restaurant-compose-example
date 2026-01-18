@@ -1,4 +1,4 @@
-package net.firzen.android.restaurantcomposeexample
+package net.firzen.android.restaurantcomposeexample.db
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity

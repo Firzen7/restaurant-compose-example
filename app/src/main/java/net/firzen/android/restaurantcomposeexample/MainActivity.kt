@@ -18,6 +18,7 @@ import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import net.firzen.android.restaurantcomposeexample.ui.screens.RestaurantDetailsScreen
 import net.firzen.android.restaurantcomposeexample.ui.screens.RestaurantsScreen
+import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixBlack
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
 // https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin
@@ -29,13 +30,9 @@ class MainActivity : ComponentActivity() {
 
         setContent {
             RestaurantComposeExampleTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
+                Scaffold(modifier = Modifier.fillMaxSize(), containerColor = MatrixBlack) { innerPadding ->
                     Box(Modifier.padding(innerPadding)) {
-
                         RestaurantsApp()
-
-//                        RestaurantDetailsScreen()
-//                        RestaurantsScreen()
                     }
                 }
             }
