@@ -1,1 +1,1 @@
-Example App for learning Jetpack Compose
+This is just an example / playground Android app for learning Jetpack Compose, Kotlin Coroutines, Retrofit, and other topics covered in [Kickstart Modern Android Development with Jetpack and Kotlin](https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin) from [Catalin Ghita](https://www.linkedin.com/in/catalin-ghita-590504127/).
