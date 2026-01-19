@@ -23,8 +23,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.fromColorLong
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
@@ -36,10 +34,9 @@ import androidx.wear.compose.material.LocalContentAlpha
 import net.firzen.android.restaurantcomposeexample.db.Restaurant
 import net.firzen.android.restaurantcomposeexample.User
 import net.firzen.android.restaurantcomposeexample.saveDetails2
-import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixBlack
+import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixBackground
 import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixGreenPrimary
 import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixGreenSecondary
-import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixTextPrimary
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
 // https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin/tree/main/Chapter_01/chapter_1_restaurants_app/app/src/main/java/com/codingtroops/restaurantsapp
@@ -69,7 +66,7 @@ fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
             onClick = { saveDetails2(context, viewModel.viewModelScope, User(5, "Frankie")) },
             colors = ButtonDefaults.buttonColors(
                 containerColor = MatrixGreenPrimary,
-                contentColor = MatrixBlack
+                contentColor = MatrixBackground
             )
         ) {
             Text(

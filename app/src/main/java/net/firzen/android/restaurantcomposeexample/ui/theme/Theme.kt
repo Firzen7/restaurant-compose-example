@@ -1,6 +1,5 @@
 package net.firzen.android.restaurantcomposeexample.ui.theme
 
-import android.app.Activity
 import android.os.Build
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.MaterialTheme
@@ -23,7 +22,7 @@ private val LightColorScheme = lightColorScheme(
     secondary = MatrixGreenSecondary,
     tertiary = Pink40,
 
-    background = MatrixBlack,
+    background = MatrixBackground,
     surface = Color(0xFFFFFBFE),
     onPrimary = Color.White,
     onSecondary = Color.White,
