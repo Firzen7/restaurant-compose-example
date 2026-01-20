@@ -9,4 +9,6 @@ import net.firzen.android.restaurantcomposeexample.db.Restaurant
  * This way, the MVVM principle is being strictly followed and UI layer does not need to be
  * detecting whether restaurants are still being loaded, etc.
  * */
-data class RestaurantsScreenState(val restaurants: List<Restaurant>, val isLoading: Boolean)
+data class RestaurantsScreenState(val restaurants: List<Restaurant>,
+                                  val isLoading: Boolean,
+                                  val error: String? = null)

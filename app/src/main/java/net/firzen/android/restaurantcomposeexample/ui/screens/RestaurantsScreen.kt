@@ -18,7 +18,6 @@ import androidx.compose.material.icons.filled.Place
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
-import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -38,9 +37,6 @@ import androidx.wear.compose.material.LocalContentAlpha
 import net.firzen.android.restaurantcomposeexample.db.Restaurant
 import net.firzen.android.restaurantcomposeexample.User
 import net.firzen.android.restaurantcomposeexample.saveDetails2
-import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixBackground
-import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixGreenPrimary
-import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixGreenSecondary
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
 // https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin/tree/main/Chapter_01/chapter_1_restaurants_app/app/src/main/java/com/codingtroops/restaurantsapp
@@ -70,8 +66,8 @@ fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
         Button(
             onClick = { saveDetails2(context, viewModel.viewModelScope, User(5, "Frankie")) },
             colors = ButtonDefaults.buttonColors(
-                containerColor = MatrixGreenPrimary,
-                contentColor = MatrixBackground
+                containerColor = Color.Blue,
+                contentColor = Color.White
             )
         ) {
             Text(
@@ -95,6 +91,10 @@ fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
                     CircularProgressIndicator(color = Color.White)
                 }
             }
+
+            if (state.error != null) {
+                Text(state.error)
+            }
         }
     }
 }
@@ -113,10 +113,7 @@ fun RestaurantItem(item: Restaurant, onFavouriteClick: (id: Int, oldValue: Boole
     Card(modifier = Modifier
         .padding(8.dp)
         // on click listener for the whole restaurant item (used to go into RestaurantDetailsScreen)
-        .clickable { onItemClick(item.id) },
-        colors = CardDefaults.cardColors(
-            containerColor = MatrixGreenSecondary
-        )
+        .clickable { onItemClick(item.id) }
     ) {
 
         Row(

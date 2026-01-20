@@ -12,7 +12,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import net.firzen.android.restaurantcomposeexample.ui.theme.MatrixGreenSecondary
 
 @Composable
 fun RestaurantDetailsScreen() {
@@ -21,7 +20,7 @@ fun RestaurantDetailsScreen() {
 
     if (item != null) {
         Column(horizontalAlignment = Alignment.CenterHorizontally,
-            modifier = Modifier.fillMaxSize().padding(16.dp).background(MatrixGreenSecondary)) {
+            modifier = Modifier.fillMaxSize().padding(16.dp)) {
 
             RestaurantIcon(
                 Icons.Filled.Place,

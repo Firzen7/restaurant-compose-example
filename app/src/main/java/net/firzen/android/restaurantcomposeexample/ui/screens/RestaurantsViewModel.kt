@@ -1,7 +1,6 @@
 package net.firzen.android.restaurantcomposeexample.ui.screens
 
 import androidx.compose.runtime.mutableStateOf
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -37,11 +36,10 @@ class RestaurantsViewModel() : ViewModel() {
     private val errorHandler = CoroutineExceptionHandler { _, exception ->
         Timber.e(exception, "Error fetching restaurants list from API!")
 
-        // TODO figure out how to correctly handle errors here (might be something to do with
-        //  MutableSharedFlow and emit())
-//        viewModelScope.launch(Dispatchers.Main) {
-//            Toast.makeText(, "sdf", Toast.LENGTH_SHORT)
-//        }
+        state.value = state.value.copy(
+            error = exception.message,
+            isLoading = false
+        )
     }
 
 
@@ -128,17 +126,6 @@ class RestaurantsViewModel() : ViewModel() {
     }
 
     fun toggleFavourite(targetId: Int, oldValue: Boolean) {
-//        val restaurants = state.value.toMutableList()
-//        val targetIndex = restaurants.indexOfFirst { it.id == targetId }
-//        val targetRestaurant = restaurants[targetIndex]
-//
-//        restaurants[targetIndex] = targetRestaurant.copy(
-//            isFavourite = !targetRestaurant.isFavourite
-//        )
-//
-////        storeSelection(restaurants[targetIndex])
-//        state.value = restaurants
-
         viewModelScope.launch {
             val updatedRestaurants = toggleFavoriteRestaurant(targetId, oldValue)
             // Here we are actually rewriting the UI state to correspond with latest data stored in DB
@@ -157,40 +144,4 @@ class RestaurantsViewModel() : ViewModel() {
             restaurantsDao.getAll()
         }
     }
-
-//    fun storeSelection(item: Restaurant) {
-//        // SavedStateHandle is a key-value storage structure, so first we get all favourite
-//        // restaurants' ids
-//        val favouriteIds = stateHandle.get<List<Int>?>(FAVOURITES).orEmpty().toMutableList()
-//
-//        // here we either add given items' id if it is set as favourite or remove it from the
-//        // list if not
-//        if(item.isFavourite) (
-//            favouriteIds.add(item.id)
-//        )
-//        else {
-//            favouriteIds.remove(item.id)
-//        }
-//
-//        // here we set new list of favourite ids into the SavedStateHandle
-//        stateHandle[FAVOURITES] = favouriteIds
-//    }
-
-//    fun List<Restaurant>.restoreSelections() : List<Restaurant> {
-//        // here we get all the stored favourite ids
-//        stateHandle.get<List<Int>?>(FAVOURITES)?.let { favouriteIds ->
-//            val restaurantsMap = this.associateBy { it.id }.toMutableMap()
-//            favouriteIds.forEach { id ->
-//                // we mark each restaurant whose id was in favourites list as favourite
-//                val restaurant = restaurantsMap[id] ?: return@forEach
-//                restaurantsMap[id] = restaurant.copy(isFavourite = true)
-//            }
-//
-//            // here we return new altered list of restaurants with correct favourite statuses
-//            return restaurantsMap.values.toList()
-//        }
-//
-//        // in case there are no stored favourite ids, we will return untouched list of restaurants
-//        return this
-//    }
 }
