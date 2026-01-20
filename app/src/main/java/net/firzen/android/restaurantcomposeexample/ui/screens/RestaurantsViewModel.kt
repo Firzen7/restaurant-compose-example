@@ -1,5 +1,6 @@
 package net.firzen.android.restaurantcomposeexample.ui.screens
 
+import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -11,11 +12,16 @@ import timber.log.Timber
 
 class RestaurantsViewModel() : ViewModel() {
 
-    val state = mutableStateOf(
+    // actual state is kept in private field
+    private val _state = mutableStateOf(
         RestaurantsScreenState(
             restaurants = listOf(),
             isLoading = true)
     )
+
+    // this ensures that UI layer cannot change the state
+    val state: State<RestaurantsScreenState>
+        get() = _state
 
     private val repository = RestaurantsRepository()
 
@@ -23,7 +29,7 @@ class RestaurantsViewModel() : ViewModel() {
     private val errorHandler = CoroutineExceptionHandler { _, exception ->
         Timber.e(exception, "Error fetching restaurants list from API!")
 
-        state.value = state.value.copy(
+        _state.value = _state.value.copy(
             error = exception.message,
             isLoading = false
         )
@@ -44,7 +50,7 @@ class RestaurantsViewModel() : ViewModel() {
         // getRemoteRestaurants() handles IO thread by itself
         viewModelScope.launch(Dispatchers.Main + errorHandler) {
             val restaurants = repository.getAllRestaurants()
-            state.value = state.value.copy(restaurants = restaurants, isLoading = false)
+            _state.value = _state.value.copy(restaurants = restaurants, isLoading = false)
         }
     }
 
@@ -56,7 +62,7 @@ class RestaurantsViewModel() : ViewModel() {
             // if we skipped this, the app would still work, but there could in theory be
             // inconsistency between shown UI state and data stored in DB.
             // So this line ensures that favourite icons are always shown correctly in the UI.
-            state.value = state.value.copy(restaurants = updatedRestaurants)
+            _state.value = _state.value.copy(restaurants = updatedRestaurants)
         }
     }
 

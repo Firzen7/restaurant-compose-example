@@ -1,6 +1,7 @@
 package net.firzen.android.restaurantcomposeexample.ui.screens
 
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.State
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +11,10 @@ import net.firzen.android.restaurantcomposeexample.db.RestaurantsRepository
 
 class RestaurantDetailsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     private val repository = RestaurantsRepository()
-    val state = mutableStateOf<Restaurant?>(null)
+    private val _state = mutableStateOf<Restaurant?>(null)
+
+    val state: State<Restaurant?>
+        get() = _state
 
     init {
         // here we are getting the id of restaurant, which was set using navigation component
@@ -19,7 +23,7 @@ class RestaurantDetailsViewModel(private val stateHandle: SavedStateHandle) : Vi
 
         viewModelScope.launch {
             val restaurant = repository.getRemoteRestaurant(restaurantId)
-            state.value = restaurant
+            _state.value = restaurant
         }
     }
 }
