@@ -22,9 +22,13 @@ import java.net.ConnectException
 import java.net.UnknownHostException
 
 class RestaurantsViewModel() : ViewModel() {
-    // we are setting list of restaurants with favourite statuses correctly assigned
-    // using SavedStateHandle via calling restoreSelections() extension function
-    val state = mutableStateOf(emptyList<Restaurant>())
+
+    val state = mutableStateOf(
+        RestaurantsScreenState(
+            restaurants = listOf(),
+            isLoading = true)
+    )
+
     private val apiService: ApiService
     private var restaurantsDao = RestaurantsDb.getDaoInstance(Main.getAppContext())
 
@@ -70,7 +74,8 @@ class RestaurantsViewModel() : ViewModel() {
         // we can launch this logic directly on Main (UI) thread, since
         // getRemoteRestaurants() handles IO thread by itself
         viewModelScope.launch(Dispatchers.Main + errorHandler) {
-            state.value = getAllRestaurants()
+            val restaurants = getAllRestaurants()
+            state.value = state.value.copy(restaurants = restaurants, isLoading = false)
         }
     }
 
@@ -123,16 +128,16 @@ class RestaurantsViewModel() : ViewModel() {
     }
 
     fun toggleFavourite(targetId: Int, oldValue: Boolean) {
-        val restaurants = state.value.toMutableList()
-        val targetIndex = restaurants.indexOfFirst { it.id == targetId }
-        val targetRestaurant = restaurants[targetIndex]
-
-        restaurants[targetIndex] = targetRestaurant.copy(
-            isFavourite = !targetRestaurant.isFavourite
-        )
-
-//        storeSelection(restaurants[targetIndex])
-        state.value = restaurants
+//        val restaurants = state.value.toMutableList()
+//        val targetIndex = restaurants.indexOfFirst { it.id == targetId }
+//        val targetRestaurant = restaurants[targetIndex]
+//
+//        restaurants[targetIndex] = targetRestaurant.copy(
+//            isFavourite = !targetRestaurant.isFavourite
+//        )
+//
+////        storeSelection(restaurants[targetIndex])
+//        state.value = restaurants
 
         viewModelScope.launch {
             val updatedRestaurants = toggleFavoriteRestaurant(targetId, oldValue)
@@ -140,7 +145,7 @@ class RestaurantsViewModel() : ViewModel() {
             // if we skipped this, the app would still work, but there could in theory be
             // inconsistency between shown UI state and data stored in DB.
             // So this line ensures that favourite icons are always shown correctly in the UI.
-            state.value = updatedRestaurants
+            state.value = state.value.copy(restaurants = updatedRestaurants)
         }
     }
 

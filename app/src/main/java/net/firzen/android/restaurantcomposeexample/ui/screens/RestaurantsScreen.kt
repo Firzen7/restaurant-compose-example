@@ -1,6 +1,5 @@
 package net.firzen.android.restaurantcomposeexample.ui.screens
 
-import android.R
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -51,6 +50,7 @@ import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExa
 @Composable
 fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
     val viewModel: RestaurantsViewModel = viewModel()
+    val state = viewModel.state.value
 
     // This is quite interesting part. We are calling viewModel.fetchRestaurants() which
     // is fetching restaurants asynchronously, so then how is it possible that
@@ -79,12 +79,9 @@ fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
             )
         }
 
-        val restaurants = viewModel.state.value
-        val isLoading = restaurants.isEmpty()
-
         Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
             LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
-                items(restaurants) { restaurant ->
+                items(state.restaurants) { restaurant ->
                     RestaurantItem(restaurant, onFavouriteClick = { clickedId, oldValue ->
                         viewModel.toggleFavourite(clickedId, oldValue)
                     }, onItemClick = { id ->
@@ -93,7 +90,7 @@ fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
                 }
             }
 
-            if(isLoading) {
+            if(state.isLoading) {
                 RestaurantComposeExampleTheme {
                     CircularProgressIndicator(color = Color.White)
                 }
