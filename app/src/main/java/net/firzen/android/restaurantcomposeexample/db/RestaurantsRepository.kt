@@ -87,4 +87,10 @@ class RestaurantsRepository {
             }
         )
     }
+
+    suspend fun getRemoteRestaurant(id: Int) : Restaurant {
+        return withContext(Dispatchers.IO) {
+            apiService.getRestaurant(id).first()
+        }
+    }
 }
