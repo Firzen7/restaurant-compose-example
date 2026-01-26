@@ -12,6 +12,8 @@ import timber.log.Timber
 import java.net.ConnectException
 import java.net.UnknownHostException
 
+// repository needs to only return domain model objects - in our case these are instances
+// of Restaurant class
 class RestaurantsRepository {
 
     /**
@@ -59,7 +61,9 @@ class RestaurantsRepository {
 
     suspend fun getRestaurants() : List<Restaurant> {
         return withContext(Dispatchers.IO) {
-            return@withContext restaurantsDao.getAll()
+            return@withContext restaurantsDao.getAll().map {
+                Restaurant(it.id, it.title, it.description, it.isFavourite)
+            }
         }
     }
 
@@ -68,7 +72,7 @@ class RestaurantsRepository {
 
         withContext(Dispatchers.IO) {
             restaurantsDao.update(
-                PartialRestaurant(id = id, isFavorite = value)
+                PartialLocalRestaurant(id = id, isFavorite = value)
             )
         }
     }
@@ -84,17 +88,19 @@ class RestaurantsRepository {
         val favoriteRestaurants = restaurantsDao.getAllFavorited()
 
         // saves new restaurants into the DB (while rewriting existing ones)
-        restaurantsDao.addAll(remoteRestaurants)
+        restaurantsDao.addAll(remoteRestaurants.map {
+            LocalRestaurant(it.id, it.title, it.description, false)
+        })
 
         // sets all new restaurants which were previously favourited to be favourited again
         restaurantsDao.updateAll(
             favoriteRestaurants.map {
-                PartialRestaurant(it.id, true)
+                PartialLocalRestaurant(it.id, true)
             }
         )
     }
 
-    suspend fun getRemoteRestaurant(id: Int) : Restaurant {
+    suspend fun getRemoteRestaurant(id: Int) : RemoteRestaurant {
         return withContext(Dispatchers.IO) {
             apiService.getRestaurant(id).first()
         }

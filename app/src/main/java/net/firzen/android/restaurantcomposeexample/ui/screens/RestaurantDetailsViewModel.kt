@@ -22,7 +22,8 @@ class RestaurantDetailsViewModel(private val stateHandle: SavedStateHandle) : Vi
         val restaurantId = stateHandle.get<Int>("restaurant_id") ?: 0
 
         viewModelScope.launch {
-            val restaurant = repository.getRemoteRestaurant(restaurantId)
+            val remote = repository.getRemoteRestaurant(restaurantId)
+            val restaurant = Restaurant(remote.id, remote.title, remote.description)
             _state.value = restaurant
         }
     }
