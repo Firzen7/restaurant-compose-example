@@ -39,14 +39,15 @@ import net.firzen.android.restaurantcomposeexample.other.User
 import net.firzen.android.restaurantcomposeexample.other.saveDetails2
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
-// https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin/tree/main/Chapter_01/chapter_1_restaurants_app/app/src/main/java/com/codingtroops/restaurantsapp
-// Pages 32 - 49
-// Added ViewModel in chapter 2 (pages 52 - 84)
-
 @Composable
-fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
+fun RestaurantsScreen(
+    state: RestaurantsScreenState,
+    onItemClick: (id: Int) -> Unit = {},
+    onFavouriteClick: (id: Int, oldValue: Boolean) -> Unit
+) {
+
     val viewModel: RestaurantsViewModel = viewModel()
-    val state = viewModel.state.value
+//    val state = viewModel.state.value
 
     // This is quite interesting part. We are calling viewModel.fetchRestaurants() which
     // is fetching restaurants asynchronously, so then how is it possible that
@@ -79,7 +80,8 @@ fun RestaurantsScreen(onItemClick: (id: Int) -> Unit = {}) {
             LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
                 items(state.restaurants) { restaurant ->
                     RestaurantItem(restaurant, onFavouriteClick = { clickedId, oldValue ->
-                        viewModel.toggleFavourite(clickedId, oldValue)
+                        onFavouriteClick(clickedId, oldValue)
+//                        viewModel.toggleFavourite(clickedId, oldValue)
                     }, onItemClick = { id ->
                         onItemClick(id)
                     })
@@ -167,6 +169,6 @@ fun RestaurantDetails(title: String, description: String, modifier: Modifier,
 @Composable
 fun RestaurantsScreenPreview() {
     RestaurantComposeExampleTheme {
-        RestaurantsScreen()
+        RestaurantsScreen(RestaurantsScreenState(listOf(), true), {}, {_, _ ->})
     }
 }
