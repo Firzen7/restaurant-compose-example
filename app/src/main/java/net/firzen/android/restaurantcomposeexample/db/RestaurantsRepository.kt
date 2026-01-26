@@ -8,6 +8,7 @@ import net.firzen.android.restaurantcomposeexample.network.ApiService
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import timber.log.Timber
 import java.net.ConnectException
 import java.net.UnknownHostException
 
@@ -31,10 +32,12 @@ class RestaurantsRepository {
     private var restaurantsDao = RestaurantsDb.getDaoInstance(Main.getAppContext())
 
 
-    suspend fun getAllRestaurants() : List<Restaurant> {
-        // Here we are returning result of getRestaurants() which is always going to be ran
-        // on IO Dispatcher! This was very difficult to do before coroutines..
-        return withContext(Dispatchers.IO) {
+    /**
+     * Tries to fetch remote restaurants and store them into DB. Throws exception if there was
+     * an issue.
+     */
+    suspend fun loadRestaurants() {
+        withContext(Dispatchers.IO) {
             try {
                 // here we try to fetch restaurants from API
                 refreshCache()
@@ -51,19 +54,22 @@ class RestaurantsRepository {
                     else -> throw e
                 }
             }
+        }
+    }
 
-            // unless there was a serious problem, we always return data stored in local Room DB,
-            // which is our Single Source of Truth
+    suspend fun getRestaurants() : List<Restaurant> {
+        return withContext(Dispatchers.IO) {
             return@withContext restaurantsDao.getAll()
         }
     }
 
-    suspend fun toggleFavoriteRestaurant(id: Int, oldValue: Boolean) : List<Restaurant> {
-        return withContext(Dispatchers.IO) {
+    suspend fun toggleFavoriteRestaurant(id: Int, value: Boolean) {
+        Timber.i("toggleFavoriteRestaurant($id, $value)")
+
+        withContext(Dispatchers.IO) {
             restaurantsDao.update(
-                PartialRestaurant(id = id, isFavorite = !oldValue)
+                PartialRestaurant(id = id, isFavorite = value)
             )
-            restaurantsDao.getAll()
         }
     }
 

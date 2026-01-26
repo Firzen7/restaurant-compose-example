@@ -7,7 +7,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.firzen.android.restaurantcomposeexample.usecases.GetInitialRestaurantsUseCase
 import net.firzen.android.restaurantcomposeexample.db.RestaurantsRepository
+import net.firzen.android.restaurantcomposeexample.usecases.ToggleRestaurantUseCase
 import timber.log.Timber
 
 class RestaurantsViewModel() : ViewModel() {
@@ -24,6 +26,9 @@ class RestaurantsViewModel() : ViewModel() {
         get() = _state
 
     private val repository = RestaurantsRepository()
+    private val getInitialRestaurantsUseCase = GetInitialRestaurantsUseCase()
+    private val toggleRestaurantUseCase = ToggleRestaurantUseCase()
+
 
     // convenient errors handler that is compatible with Coroutines
     private val errorHandler = CoroutineExceptionHandler { _, exception ->
@@ -49,7 +54,7 @@ class RestaurantsViewModel() : ViewModel() {
         // we can launch this logic directly on Main (UI) thread, since
         // getRemoteRestaurants() handles IO thread by itself
         viewModelScope.launch(Dispatchers.Main + errorHandler) {
-            val restaurants = repository.getAllRestaurants()
+            val restaurants = getInitialRestaurantsUseCase()
             _state.value = _state.value.copy(restaurants = restaurants, isLoading = false)
         }
     }
@@ -57,7 +62,7 @@ class RestaurantsViewModel() : ViewModel() {
 
     fun toggleFavourite(targetId: Int, oldValue: Boolean) {
         viewModelScope.launch {
-            val updatedRestaurants = repository.toggleFavoriteRestaurant(targetId, oldValue)
+            val updatedRestaurants = toggleRestaurantUseCase(targetId, oldValue)
             // Here we are actually rewriting the UI state to correspond with latest data stored in DB
             // if we skipped this, the app would still work, but there could in theory be
             // inconsistency between shown UI state and data stored in DB.
