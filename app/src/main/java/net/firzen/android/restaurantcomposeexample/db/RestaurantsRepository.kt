@@ -2,8 +2,8 @@ package net.firzen.android.restaurantcomposeexample.db
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-import net.firzen.android.restaurantcomposeexample.BASE_API_URL
-import net.firzen.android.restaurantcomposeexample.Main
+import net.firzen.android.restaurantcomposeexample.main.BASE_API_URL
+import net.firzen.android.restaurantcomposeexample.main.Main
 import net.firzen.android.restaurantcomposeexample.network.ApiService
 import retrofit2.HttpException
 import retrofit2.Retrofit

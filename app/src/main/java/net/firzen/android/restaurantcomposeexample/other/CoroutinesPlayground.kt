@@ -1,4 +1,4 @@
-package net.firzen.android.restaurantcomposeexample
+package net.firzen.android.restaurantcomposeexample.other
 
 import android.content.Context
 import android.widget.Toast

@@ -1,4 +1,4 @@
-package net.firzen.android.restaurantcomposeexample
+package net.firzen.android.restaurantcomposeexample.main
 
 import android.app.Application
 import android.content.Context

@@ -35,8 +35,8 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.ContentAlpha
 import androidx.wear.compose.material.LocalContentAlpha
 import net.firzen.android.restaurantcomposeexample.db.Restaurant
-import net.firzen.android.restaurantcomposeexample.User
-import net.firzen.android.restaurantcomposeexample.saveDetails2
+import net.firzen.android.restaurantcomposeexample.other.User
+import net.firzen.android.restaurantcomposeexample.other.saveDetails2
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
 // https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin/tree/main/Chapter_01/chapter_1_restaurants_app/app/src/main/java/com/codingtroops/restaurantsapp
