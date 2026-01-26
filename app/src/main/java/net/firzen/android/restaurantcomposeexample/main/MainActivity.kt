@@ -16,8 +16,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
-import net.firzen.android.restaurantcomposeexample.ui.screens.RestaurantDetailsScreen
-import net.firzen.android.restaurantcomposeexample.ui.screens.RestaurantsScreen
+import net.firzen.android.restaurantcomposeexample.presentation.details.RestaurantDetailsScreen
+import net.firzen.android.restaurantcomposeexample.presentation.list.RestaurantsScreen
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
 // https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin

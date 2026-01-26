@@ -1,10 +1,15 @@
-package net.firzen.android.restaurantcomposeexample.db
+package net.firzen.android.restaurantcomposeexample.data
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
+import net.firzen.android.restaurantcomposeexample.data.local.LocalRestaurant
+import net.firzen.android.restaurantcomposeexample.data.local.PartialLocalRestaurant
+import net.firzen.android.restaurantcomposeexample.data.local.RestaurantsDb
 import net.firzen.android.restaurantcomposeexample.main.BASE_API_URL
 import net.firzen.android.restaurantcomposeexample.main.Main
-import net.firzen.android.restaurantcomposeexample.network.ApiService
+import net.firzen.android.restaurantcomposeexample.data.remote.ApiService
+import net.firzen.android.restaurantcomposeexample.data.remote.RemoteRestaurant
+import net.firzen.android.restaurantcomposeexample.domain.Restaurant
 import retrofit2.HttpException
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory

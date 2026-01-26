@@ -1,4 +1,4 @@
-package net.firzen.android.restaurantcomposeexample.ui.screens
+package net.firzen.android.restaurantcomposeexample.presentation.details
 
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.State
@@ -6,8 +6,8 @@ import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import net.firzen.android.restaurantcomposeexample.db.Restaurant
-import net.firzen.android.restaurantcomposeexample.db.RestaurantsRepository
+import net.firzen.android.restaurantcomposeexample.domain.Restaurant
+import net.firzen.android.restaurantcomposeexample.data.RestaurantsRepository
 
 class RestaurantDetailsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     private val repository = RestaurantsRepository()

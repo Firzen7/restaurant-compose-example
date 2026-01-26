@@ -1,6 +1,6 @@
-package net.firzen.android.restaurantcomposeexample.ui.screens
+package net.firzen.android.restaurantcomposeexample.presentation.list
 
-import net.firzen.android.restaurantcomposeexample.db.Restaurant
+import net.firzen.android.restaurantcomposeexample.domain.Restaurant
 
 /**
  * This represents custom state of restaurants list with flag telling the UI if restaurants

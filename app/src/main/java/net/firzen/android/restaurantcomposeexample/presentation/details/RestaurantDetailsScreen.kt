@@ -1,4 +1,4 @@
-package net.firzen.android.restaurantcomposeexample.ui.screens
+package net.firzen.android.restaurantcomposeexample.presentation.details
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -11,6 +11,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import net.firzen.android.restaurantcomposeexample.presentation.list.RestaurantDetails
+import net.firzen.android.restaurantcomposeexample.presentation.list.RestaurantIcon
 
 @Composable
 fun RestaurantDetailsScreen() {

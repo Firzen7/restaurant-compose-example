@@ -1,7 +1,7 @@
-package net.firzen.android.restaurantcomposeexample.usecases
+package net.firzen.android.restaurantcomposeexample.domain
 
-import net.firzen.android.restaurantcomposeexample.db.Restaurant
-import net.firzen.android.restaurantcomposeexample.db.RestaurantsRepository
+import net.firzen.android.restaurantcomposeexample.domain.Restaurant
+import net.firzen.android.restaurantcomposeexample.data.RestaurantsRepository
 
 /**
  * Loads cached restaurants from DB and sorts them alphabetically by their title.

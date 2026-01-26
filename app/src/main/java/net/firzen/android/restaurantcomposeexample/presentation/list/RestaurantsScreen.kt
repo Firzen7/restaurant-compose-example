@@ -1,4 +1,4 @@
-package net.firzen.android.restaurantcomposeexample.ui.screens
+package net.firzen.android.restaurantcomposeexample.presentation.list
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
@@ -34,7 +34,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.ContentAlpha
 import androidx.wear.compose.material.LocalContentAlpha
-import net.firzen.android.restaurantcomposeexample.db.Restaurant
+import net.firzen.android.restaurantcomposeexample.domain.Restaurant
 import net.firzen.android.restaurantcomposeexample.other.User
 import net.firzen.android.restaurantcomposeexample.other.saveDetails2
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme

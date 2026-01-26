@@ -1,4 +1,4 @@
-package net.firzen.android.restaurantcomposeexample.db
+package net.firzen.android.restaurantcomposeexample.data.local
 
 import android.content.Context
 import androidx.room.Database

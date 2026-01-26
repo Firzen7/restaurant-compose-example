@@ -1,7 +1,5 @@
-package net.firzen.android.restaurantcomposeexample.network
+package net.firzen.android.restaurantcomposeexample.data.remote
 
-import net.firzen.android.restaurantcomposeexample.db.RemoteRestaurant
-import net.firzen.android.restaurantcomposeexample.db.Restaurant
 import retrofit2.http.GET
 import retrofit2.http.Query
 

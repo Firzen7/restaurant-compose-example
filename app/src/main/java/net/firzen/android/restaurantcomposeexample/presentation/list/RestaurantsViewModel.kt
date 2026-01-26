@@ -1,4 +1,4 @@
-package net.firzen.android.restaurantcomposeexample.ui.screens
+package net.firzen.android.restaurantcomposeexample.presentation.list
 
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
@@ -7,9 +7,9 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import net.firzen.android.restaurantcomposeexample.usecases.GetInitialRestaurantsUseCase
-import net.firzen.android.restaurantcomposeexample.db.RestaurantsRepository
-import net.firzen.android.restaurantcomposeexample.usecases.ToggleRestaurantUseCase
+import net.firzen.android.restaurantcomposeexample.domain.GetInitialRestaurantsUseCase
+import net.firzen.android.restaurantcomposeexample.data.RestaurantsRepository
+import net.firzen.android.restaurantcomposeexample.domain.ToggleRestaurantUseCase
 import timber.log.Timber
 
 class RestaurantsViewModel() : ViewModel() {

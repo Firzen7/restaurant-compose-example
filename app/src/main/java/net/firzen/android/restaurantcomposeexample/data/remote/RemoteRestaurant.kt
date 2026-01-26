@@ -1,4 +1,4 @@
-package net.firzen.android.restaurantcomposeexample.db
+package net.firzen.android.restaurantcomposeexample.data.remote
 
 import com.google.gson.annotations.SerializedName
 

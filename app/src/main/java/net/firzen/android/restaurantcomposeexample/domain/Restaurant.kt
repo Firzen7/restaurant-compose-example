@@ -1,4 +1,4 @@
-package net.firzen.android.restaurantcomposeexample.db
+package net.firzen.android.restaurantcomposeexample.domain
 
 // this is our domain model class
 data class Restaurant(
