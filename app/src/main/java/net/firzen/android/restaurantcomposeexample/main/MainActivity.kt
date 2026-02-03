@@ -10,20 +10,20 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
+import dagger.hilt.android.AndroidEntryPoint
 import net.firzen.android.restaurantcomposeexample.presentation.details.RestaurantDetailsScreen
 import net.firzen.android.restaurantcomposeexample.presentation.list.RestaurantsScreen
 import net.firzen.android.restaurantcomposeexample.presentation.list.RestaurantsViewModel
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
-// https://github.com/PacktPublishing/Kickstart-Modern-Android-Development-with-Jetpack-and-Kotlin
-
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,7 +46,7 @@ private fun RestaurantsApp() {
     val navController = rememberNavController()
     NavHost(navController, startDestination = "restaurants") {
         composable(route = "restaurants") {
-            val viewModel: RestaurantsViewModel = viewModel()
+            val viewModel: RestaurantsViewModel = hiltViewModel()
 
             RestaurantsScreen(
                 state = viewModel.state.value,

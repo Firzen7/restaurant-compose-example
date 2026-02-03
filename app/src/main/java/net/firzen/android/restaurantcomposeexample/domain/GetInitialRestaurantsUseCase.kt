@@ -1,11 +1,13 @@
 package net.firzen.android.restaurantcomposeexample.domain
 
-import net.firzen.android.restaurantcomposeexample.domain.Restaurant
 import net.firzen.android.restaurantcomposeexample.data.RestaurantsRepository
+import javax.inject.Inject
 
-class GetInitialRestaurantsUseCase {
-    private val repository = RestaurantsRepository()
-    private val getSortedRestaurantsUseCase = GetSortedRestaurantsUseCase()
+// constructor fields here are being initialized by Hilt
+class GetInitialRestaurantsUseCase @Inject constructor(
+    private val repository: RestaurantsRepository,
+    private val getSortedRestaurantsUseCase: GetSortedRestaurantsUseCase
+) {
 
     /**
      * `operator` keyword and `invoke()` name allows calling this method without its name like this:

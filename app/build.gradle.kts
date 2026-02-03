@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.kotlin.kapt)
+    id("com.google.dagger.hilt.android")
 }
 
 android {
@@ -42,6 +43,8 @@ android {
     }
 }
 
+val hilt_version = "2.57.1"
+
 dependencies {
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
@@ -69,9 +72,17 @@ dependencies {
     // AndroidX navigation for Compose
     implementation("androidx.navigation:navigation-compose:2.9.6")
 
+    // Room DB
     implementation("androidx.room:room-runtime:2.8.4")
     kapt("androidx.room:room-compiler:2.8.4")
     implementation("androidx.room:room-ktx:2.8.4")
+
+    // Jetpack Hilt (uses Dagger under the hood)
+    implementation("com.google.dagger:hilt-android:$hilt_version")
+    implementation("com.google.dagger:hilt-android-gradle-plugin:$hilt_version")
+    implementation("androidx.hilt:hilt-navigation-compose:1.3.0")
+    // allows DI inside of composable functions
+    kapt("com.google.dagger:hilt-compiler:$hilt_version")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)

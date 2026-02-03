@@ -4,40 +4,22 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import net.firzen.android.restaurantcomposeexample.data.local.LocalRestaurant
 import net.firzen.android.restaurantcomposeexample.data.local.PartialLocalRestaurant
-import net.firzen.android.restaurantcomposeexample.data.local.RestaurantsDb
-import net.firzen.android.restaurantcomposeexample.main.BASE_API_URL
-import net.firzen.android.restaurantcomposeexample.main.Main
+import net.firzen.android.restaurantcomposeexample.data.local.RestaurantsDao
 import net.firzen.android.restaurantcomposeexample.data.remote.ApiService
 import net.firzen.android.restaurantcomposeexample.data.remote.RemoteRestaurant
 import net.firzen.android.restaurantcomposeexample.domain.Restaurant
 import retrofit2.HttpException
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 import timber.log.Timber
 import java.net.ConnectException
 import java.net.UnknownHostException
+import javax.inject.Inject
 
 // repository needs to only return domain model objects - in our case these are instances
 // of Restaurant class
-class RestaurantsRepository {
-
-    /**
-     * Retrofit initialization
-     */
-    private var apiService: ApiService = Retrofit.Builder()
-        // here we add GSON support for Retrofit
-        .addConverterFactory(
-            GsonConverterFactory.create()
-        )
-        .baseUrl(
-            // Base API endpoint URL
-            BASE_API_URL
-        )
-        .build()
-        .create(ApiService::class.java)
-
-    private var restaurantsDao = RestaurantsDb.getDaoInstance(Main.getAppContext())
-
+class RestaurantsRepository @Inject constructor(
+    private val apiService: ApiService,
+    private val restaurantsDao: RestaurantsDao
+) {
 
     /**
      * Tries to fetch remote restaurants and store them into DB. Throws exception if there was

@@ -4,15 +4,22 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import net.firzen.android.restaurantcomposeexample.domain.GetInitialRestaurantsUseCase
-import net.firzen.android.restaurantcomposeexample.data.RestaurantsRepository
 import net.firzen.android.restaurantcomposeexample.domain.ToggleRestaurantUseCase
 import timber.log.Timber
+import javax.inject.Inject
 
-class RestaurantsViewModel() : ViewModel() {
+// constructor fields here are being initialized by Hilt
+// annotated as @HiltViewModel so that Hilt know when to use this when hiltViewModel() is called
+@HiltViewModel
+class RestaurantsViewModel @Inject constructor(
+    private val getInitialRestaurantsUseCase: GetInitialRestaurantsUseCase,
+    private val toggleRestaurantUseCase: ToggleRestaurantUseCase
+    ) : ViewModel() {
 
     // actual state is kept in private field
     private val _state = mutableStateOf(
@@ -24,10 +31,6 @@ class RestaurantsViewModel() : ViewModel() {
     // this ensures that UI layer cannot change the state
     val state: State<RestaurantsScreenState>
         get() = _state
-
-    private val repository = RestaurantsRepository()
-    private val getInitialRestaurantsUseCase = GetInitialRestaurantsUseCase()
-    private val toggleRestaurantUseCase = ToggleRestaurantUseCase()
 
 
     // convenient errors handler that is compatible with Coroutines

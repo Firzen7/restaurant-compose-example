@@ -10,13 +10,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import net.firzen.android.restaurantcomposeexample.presentation.list.RestaurantDetails
 import net.firzen.android.restaurantcomposeexample.presentation.list.RestaurantIcon
 
 @Composable
 fun RestaurantDetailsScreen() {
-    val viewModel: RestaurantDetailsViewModel = viewModel()
+    val viewModel: RestaurantDetailsViewModel = hiltViewModel()
     val item = viewModel.state.value
 
     if (item != null) {

@@ -5,12 +5,17 @@ import androidx.compose.runtime.State
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import net.firzen.android.restaurantcomposeexample.domain.Restaurant
 import net.firzen.android.restaurantcomposeexample.data.RestaurantsRepository
+import javax.inject.Inject
 
-class RestaurantDetailsViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
-    private val repository = RestaurantsRepository()
+@HiltViewModel
+class RestaurantDetailsViewModel @Inject constructor(
+    private val stateHandle: SavedStateHandle,
+    private val repository: RestaurantsRepository) : ViewModel() {
+
     private val _state = mutableStateOf<Restaurant?>(null)
 
     val state: State<Restaurant?>
