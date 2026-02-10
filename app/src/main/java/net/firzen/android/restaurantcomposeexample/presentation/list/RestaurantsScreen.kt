@@ -27,28 +27,23 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.wear.compose.material.ContentAlpha
 import androidx.wear.compose.material.LocalContentAlpha
 import net.firzen.android.restaurantcomposeexample.domain.Restaurant
-import net.firzen.android.restaurantcomposeexample.other.User
-import net.firzen.android.restaurantcomposeexample.other.saveDetails2
+import net.firzen.android.restaurantcomposeexample.presentation.Description
 import net.firzen.android.restaurantcomposeexample.ui.theme.RestaurantComposeExampleTheme
 
 @Composable
 fun RestaurantsScreen(
     state: RestaurantsScreenState,
     onItemClick: (id: Int) -> Unit = {},
-    onFavouriteClick: (id: Int, oldValue: Boolean) -> Unit
+    onFavouriteClick: (id: Int, oldValue: Boolean) -> Unit,
+    onLaunchCoroutineClick: () -> Unit
 ) {
-
-    val viewModel: RestaurantsViewModel = viewModel()
-//    val state = viewModel.state.value
-
     // This is quite interesting part. We are calling viewModel.fetchRestaurants() which
     // is fetching restaurants asynchronously, so then how is it possible that
     // restaurants are correctly shown in the app? The restaurants list should be still empty
@@ -57,15 +52,13 @@ fun RestaurantsScreen(
     // fetchRestaurants(), and since we are getting restaurant items from there,
     // it triggers recomposition of this LazyColumn automatically later on.
 
-    val context = LocalContext.current
-
     Column(
         modifier = Modifier.fillMaxWidth(),
         horizontalAlignment = Alignment.CenterHorizontally) {
 
         // "Launch coroutine" test button
         Button(
-            onClick = { saveDetails2(context, viewModel.viewModelScope, User(5, "Frankie")) },
+            onClick = { onLaunchCoroutineClick() },
             colors = ButtonDefaults.buttonColors(
                 containerColor = Color.Blue,
                 contentColor = Color.White
@@ -81,7 +74,6 @@ fun RestaurantsScreen(
                 items(state.restaurants) { restaurant ->
                     RestaurantItem(restaurant, onFavouriteClick = { clickedId, oldValue ->
                         onFavouriteClick(clickedId, oldValue)
-//                        viewModel.toggleFavourite(clickedId, oldValue)
                     }, onItemClick = { id ->
                         onItemClick(id)
                     })
@@ -90,7 +82,13 @@ fun RestaurantsScreen(
 
             if(state.isLoading) {
                 RestaurantComposeExampleTheme {
-                    CircularProgressIndicator(color = Color.White)
+                    CircularProgressIndicator(
+                        color = Color.Black,
+                        // semantics added so that this component can be identified in unit tests
+                        modifier = Modifier.semantics {
+                            this.contentDescription = Description.RESTAURANTS_LOADING
+                        }
+                    )
                 }
             }
 
@@ -169,6 +167,6 @@ fun RestaurantDetails(title: String, description: String, modifier: Modifier,
 @Composable
 fun RestaurantsScreenPreview() {
     RestaurantComposeExampleTheme {
-        RestaurantsScreen(RestaurantsScreenState(listOf(), true), {}, {_, _ ->})
+        RestaurantsScreen(RestaurantsScreenState(listOf(), true), {}, {_, _ ->}, {})
     }
 }
