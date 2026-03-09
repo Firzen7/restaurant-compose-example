@@ -130,6 +130,10 @@ class RestaurantScreenTests {
         Thread.sleep(2000)
     }
 
+    /**
+     * Simulates clicking on first item in restaurants list, and checks if correct
+     * restaurant was clicked.
+     */
     @Test
     fun stateWithContent_ClickOnItem_isRegistered() {
         val restaurants = DummyContent.getDomainRestaurants()
