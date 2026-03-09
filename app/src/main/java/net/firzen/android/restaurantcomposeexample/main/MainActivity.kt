@@ -10,7 +10,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -18,6 +20,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import androidx.navigation.navDeepLink
 import dagger.hilt.android.AndroidEntryPoint
+import net.firzen.android.restaurantcomposeexample.other.User
+import net.firzen.android.restaurantcomposeexample.other.saveDetails2
 import net.firzen.android.restaurantcomposeexample.presentation.details.RestaurantDetailsScreen
 import net.firzen.android.restaurantcomposeexample.presentation.list.RestaurantsScreen
 import net.firzen.android.restaurantcomposeexample.presentation.list.RestaurantsViewModel
@@ -47,6 +51,7 @@ private fun RestaurantsApp() {
     NavHost(navController, startDestination = "restaurants") {
         composable(route = "restaurants") {
             val viewModel: RestaurantsViewModel = hiltViewModel()
+            val context = LocalContext.current
 
             RestaurantsScreen(
                 state = viewModel.state.value,
@@ -55,6 +60,9 @@ private fun RestaurantsApp() {
                 },
                 onFavouriteClick = { id, oldValue ->
                     viewModel.toggleFavourite(id, oldValue)
+                },
+                onLaunchCoroutineClick = {
+                    saveDetails2(context, viewModel.viewModelScope, User(5, "Frankie"))
                 }
             )
         }
