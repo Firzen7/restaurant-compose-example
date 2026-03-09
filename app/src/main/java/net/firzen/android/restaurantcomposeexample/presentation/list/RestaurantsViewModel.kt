@@ -5,9 +5,10 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import net.firzen.android.restaurantcomposeexample.di.MainDispatcher
 import net.firzen.android.restaurantcomposeexample.domain.GetInitialRestaurantsUseCase
 import net.firzen.android.restaurantcomposeexample.domain.ToggleRestaurantUseCase
 import timber.log.Timber
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class RestaurantsViewModel @Inject constructor(
     private val getInitialRestaurantsUseCase: GetInitialRestaurantsUseCase,
-    private val toggleRestaurantUseCase: ToggleRestaurantUseCase
+    private val toggleRestaurantUseCase: ToggleRestaurantUseCase,
+    @MainDispatcher private val dispatcher: CoroutineDispatcher
     ) : ViewModel() {
 
     // actual state is kept in private field
@@ -56,15 +58,14 @@ class RestaurantsViewModel @Inject constructor(
 
         // we can launch this logic directly on Main (UI) thread, since
         // getRemoteRestaurants() handles IO thread by itself
-        viewModelScope.launch(Dispatchers.Main + errorHandler) {
+        viewModelScope.launch(dispatcher + errorHandler) {
             val restaurants = getInitialRestaurantsUseCase()
             _state.value = _state.value.copy(restaurants = restaurants, isLoading = false)
         }
     }
 
-
     fun toggleFavourite(targetId: Int, oldValue: Boolean) {
-        viewModelScope.launch {
+        viewModelScope.launch(dispatcher) {
             val updatedRestaurants = toggleRestaurantUseCase(targetId, oldValue)
             // Here we are actually rewriting the UI state to correspond with latest data stored in DB
             // if we skipped this, the app would still work, but there could in theory be
@@ -73,5 +74,4 @@ class RestaurantsViewModel @Inject constructor(
             _state.value = _state.value.copy(restaurants = updatedRestaurants)
         }
     }
-
 }
