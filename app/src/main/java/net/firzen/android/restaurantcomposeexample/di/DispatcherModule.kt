@@ -14,6 +14,11 @@ import javax.inject.Qualifier
 @Retention(AnnotationRetention.BINARY)
 annotation class MainDispatcher
 
+@Qualifier
+@Retention(AnnotationRetention.BINARY)
+annotation class IoDispatcher
+
+
 // this tells hilt how to initialize `dispatcher` parameter in RestaurantsViewModel.
 @Module
 @InstallIn(SingletonComponent::class)
@@ -22,4 +27,8 @@ object DispatcherModule {
     @MainDispatcher
     @Provides
     fun providesMainDispatcher() : CoroutineDispatcher = Dispatchers.Main
+
+    @IoDispatcher
+    @Provides
+    fun providesIoDispatcher() : CoroutineDispatcher = Dispatchers.IO
 }

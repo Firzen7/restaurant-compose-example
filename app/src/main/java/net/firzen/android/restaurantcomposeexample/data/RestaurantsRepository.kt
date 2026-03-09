@@ -1,12 +1,13 @@
 package net.firzen.android.restaurantcomposeexample.data
 
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 import net.firzen.android.restaurantcomposeexample.data.local.LocalRestaurant
 import net.firzen.android.restaurantcomposeexample.data.local.PartialLocalRestaurant
 import net.firzen.android.restaurantcomposeexample.data.local.RestaurantsDao
 import net.firzen.android.restaurantcomposeexample.data.remote.ApiService
 import net.firzen.android.restaurantcomposeexample.data.remote.RemoteRestaurant
+import net.firzen.android.restaurantcomposeexample.di.IoDispatcher
 import net.firzen.android.restaurantcomposeexample.domain.Restaurant
 import retrofit2.HttpException
 import timber.log.Timber
@@ -18,7 +19,8 @@ import javax.inject.Inject
 // of Restaurant class
 class RestaurantsRepository @Inject constructor(
     private val apiService: ApiService,
-    private val restaurantsDao: RestaurantsDao
+    private val restaurantsDao: RestaurantsDao,
+    @IoDispatcher private val dispatcher: CoroutineDispatcher
 ) {
 
     /**
@@ -26,7 +28,7 @@ class RestaurantsRepository @Inject constructor(
      * an issue.
      */
     suspend fun loadRestaurants() {
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             try {
                 // here we try to fetch restaurants from API
                 refreshCache()
@@ -47,7 +49,7 @@ class RestaurantsRepository @Inject constructor(
     }
 
     suspend fun getRestaurants() : List<Restaurant> {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             return@withContext restaurantsDao.getAll().map {
                 Restaurant(it.id, it.title, it.description, it.isFavourite)
             }
@@ -57,7 +59,7 @@ class RestaurantsRepository @Inject constructor(
     suspend fun toggleFavoriteRestaurant(id: Int, value: Boolean) {
         Timber.i("toggleFavoriteRestaurant($id, $value)")
 
-        withContext(Dispatchers.IO) {
+        withContext(dispatcher) {
             restaurantsDao.update(
                 PartialLocalRestaurant(id = id, isFavorite = value)
             )
@@ -88,7 +90,7 @@ class RestaurantsRepository @Inject constructor(
     }
 
     suspend fun getRemoteRestaurant(id: Int) : RemoteRestaurant {
-        return withContext(Dispatchers.IO) {
+        return withContext(dispatcher) {
             apiService.getRestaurant(id).first()
         }
     }
